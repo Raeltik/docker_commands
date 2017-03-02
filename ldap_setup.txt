@@ -1,0 +1,38 @@
+
+Docker Command:
+
+docker run --restart always --name ldap --hostname ldap \
+--volume /etc/letsencryp/live/coreinfluence.ninja/:/container/service/slapd/assets/certs \
+--env LDAP_ORGANISATION="9Soc" \
+--env LDAP_DOMAIN="coreinfluence.ninja" \
+--env LDAP_ADMIN_PASSWORD="lD@p@dm1nT1m3" \
+--env LDAP_TLS_CRT_FILENAME=cert.pem \
+--env LDAP_TLS_CRT_FILENAME=privkey.pem \
+--env LDAP_TLS_CA_CRT_FILENAME=fullchain.pem \
+--volume /srv/ldap/database:/var/lib/ldap \
+--volume /srv/ldap/config:/etc/ldap/slapd.d \
+-p 127.0.0.1:3890:389 -p 127.0.0.1:6360:636 \
+--detach osixia/openldap
+
+cn=admin,dc=coreinfluence,dc=ninja
+
+
+Setting up PWM - LDAP self Service App
+https://github.com/pwm-project/pwm
+
+
+docker run -p 6443:443 --name ldapadmin\
+--env PHPLDAPADMIN_LDAP_HOSTS=ldap.coreinfluence.ninja \
+--detach osixia/phpldapadmin:0.6.11
+
+docker run --name ldap-service --hostname ldap-service --detach osixia/openldap:1.1.1
+
+docker run --name phpldapadmin-service -p 6443:443 --hostname phpldapadmin-service --link ldap:ldap-host \
+--env PHPLDAPADMIN_LDAP_HOSTS=ldap-host --detach osixia/phpldapadmin:0.6.11
+
+PHPLDAP_IP=$(docker inspect -f "{{ .NetworkSettings.IPAddress }}" phpldapadmin-service)
+
+            echo "Go to: https://$PHPLDAP_IP"
+            echo "Login DN: cn=admin,dc=example,dc=org"
+            echo "Password: admin"
+

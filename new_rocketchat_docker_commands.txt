@@ -1,0 +1,3 @@
+docker run --restart always --name db -d mongo:3.2 --smallfiles
+docker run -d --restart always --name rocketchat -p 127.0.0.1:3000:3000 --env ROOT_URL=http://chat.coreinfluence.ninja/ --link db -d rocket.chat:latest
+

@@ -1,0 +1,23 @@
+# OLD
+git clone https://github.com/kdelfour/cloud9-docker
+cd cloud9-docker/
+sudo docker build --force-rm=true --tag="prod-admin/cloud9-docker:latest" .
+mkdir -p /srv/c9/workspace
+sudo docker run -d -p 127:0.0.1:8088:80 -v /srv/c9/workspace/:/workspace/ prod-admin/cloud9-docker:latest
+# NEW
+git clone https://github.com/eea/eea.docker.cloud9
+cd eea.docker.cloud9/
+# edit docker-compose.yaml
+cat > docker-compose.yaml <<EOF
+ide:
+  build: .
+  environment:
+    - C9_EXTRA=--collab -a collabuser:collabpass
+    - C9_WORKSPACE=/data/workspace
+  volumes:
+    - /srv/c9/workspace:/data/workspace:z
+  ports:
+    - 127.0.0.1:8088:8080
+EOF
+docker-compose up -d
+

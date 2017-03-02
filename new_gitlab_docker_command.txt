@@ -1,0 +1,1 @@
+docker run -d --restart always -p 127.0.0.1:8888:80 -p 127.0.0.1:2222:22 --hostname=gitlab.coreinfluence.ninja --name gitlab --volume /srv/gitlab/config:/etc/gitlab --volume /srv/gitlab/logs:/var/log/gitlab --volume /srv/gitlab/data:/var/opt/gitlab gitlab/gitlab-ce:latest

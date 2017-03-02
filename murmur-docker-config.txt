@@ -1,0 +1,14 @@
+config : /srv/murmur/config/murmur.ini
+sqliteDB: /srv/murmur/data
+
+
+git clone https://github.com/mattikus/docker-murmur.git     
+
+sudo docker run -d --name mumble -p 64738:64738 -p 64738:64738/udp \
+-v /srv/murmur/config/murmur.ini:/etc/murmur.ini \
+-v /srv/murmur/data:/data mattikus/murmur
+
+for super user password :   
+    docker logs mumble 2>&1 | grep Password
+
+
